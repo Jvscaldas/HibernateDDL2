@@ -8,74 +8,74 @@ import org.hibernate.SessionFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Query;
-import model.Atendente;
+import model.Cliente;
 
-public class AtendenteDao implements IObjDao<Atendente> {
-
-	private SessionFactory sf;
-
-	public AtendenteDao(SessionFactory sf) {
+public class ClienteDao implements IObjDao<Cliente> {
+	
+private SessionFactory sf;
+	
+	public ClienteDao(SessionFactory sf) {
 		this.sf = sf;
 	}
 
 	@Override
-	public void insere(Atendente t) {
+	public void insere(Cliente cli) {
 		EntityManager entityManager = sf.createEntityManager();
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.persist(t);
+		entityManager.persist(cli);
 		transaction.commit();
-
 	}
 
 	@Override
-	public void modifica(Atendente t) {
+	public void modifica(Cliente cli) {
 		EntityManager entityManager = sf.createEntityManager();
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.merge(t);
+		entityManager.merge(cli);
 		transaction.commit();
-
 	}
 
 	@Override
-	public void remove(Atendente t) {
+	public void remove(Cliente cli) {
 		EntityManager entityManager = sf.createEntityManager();
 		EntityTransaction transaction = entityManager.getTransaction();
 		transaction.begin();
-		entityManager.remove(t);
+		entityManager.remove(cli);
 		transaction.commit();
-
 	}
 
 	@Override
-	public Atendente busca(Atendente t) {
+	public Cliente busca(Cliente cli) {
 		EntityManager entityManager = sf.createEntityManager();
-		t = entityManager.find(Atendente.class, t.getId_funcionario());
-		return t;
+		cli = entityManager.find(Cliente.class, cli.getCpf());
+		return cli;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Atendente> lista() {
-		List<Atendente> atendentes = new ArrayList<Atendente>();
+	public List<Cliente> lista() {
+		List<Cliente> clientes = new ArrayList<Cliente>();
 		StringBuffer buffer = new StringBuffer();
-		buffer.append("SELECT email_atendente, hr_entrada, hr_saida ");
-		buffer.append("FROM atendente ");
-		buffer.append("ORDER BY email_atendente");
+		buffer.append("SELECT cpf_cliente, nome_cliente, email_cliente, contato, ");
+		buffer.append("pronome ");
+		buffer.append("FROM cliente ");
+		buffer.append("ORDER BY nome_cliente");
 		EntityManager entityManager = sf.createEntityManager();
 		Query query = entityManager.createNativeQuery(buffer.toString());
 		List<Object[]> lista = query.getResultList();
 		for (Object[] obj : lista) {
-			Atendente a = new Atendente();
-			a.setEmail(obj[0].toString());
-			a.setHr_entrada(obj[1].toString());
-			a.setHr_saida(obj[2].toString());
-
-			atendentes.add(a);
+			Cliente cli = new Cliente();
+			cli.setCpf(obj[0].toString());
+			cli.setNome(obj[1].toString());
+			cli.setEmail(obj[2].toString());
+			cli.setContato(obj[3].toString());
+			cli.setPronome(obj[4].toString());
+			
+			clientes.add(cli);
 		}
-
-		return atendentes;
+		
+		return clientes;
 	}
 
 }
